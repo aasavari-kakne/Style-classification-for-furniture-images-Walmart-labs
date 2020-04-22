@@ -54,7 +54,7 @@ Name this file "submit.sh" containing following lines and run "sbatch submit.sh"
 #SBATCH --ntasks=1 
 #SBATCH --cpus-per-task=8
 ```
-### Other slurm resources(check reference 4) :
+### Other slurm resources (check reference 4) :
 1) squeue -u <user_name> : checks status of the jobs for this user.
 2) squeue <job_id> : checks status of a particular job.
 3) slurm-<job_id>.out : log of output.
