@@ -7,6 +7,8 @@ PyTorch Implementation of Contrastive Predictive Coding for image recognition, b
 # Data set loading:
 ## Dependecies: 
 1) torch version 1.3.1
-2) torchdivision 0.5.0
-Use - 
-```pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html```
+2) torchdivision 0.5.0 \
+Use - \
+```
+pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
+```
