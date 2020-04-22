@@ -13,7 +13,7 @@ or
 ```
 conda install -c pytorch torchvision
 ```
-2. Install PIL using following instuctions
+2. Always use pip3 and python3 commands. 
 
 
 
