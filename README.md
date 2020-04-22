@@ -4,7 +4,8 @@ PyTorch Implementation of Contrastive Predictive Coding for image recognition, b
 ### See more details in this [blog post](https://mf1024.github.io/2019/05/27/contrastive-predictive-coding/).
 
 # Dependecies:
-Run ```pip3 install -r requirements.txt``` and then install PyTorch using following instructions. 
+Run ```pip3 install -r requirements.txt``` and then 
+1. Install PyTorch using following instructions. 
 ```
 pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
 ```
@@ -12,6 +13,8 @@ or
 ```
 conda install -c pytorch torchvision
 ```
+2. Install PIL using following instuctions
+
 
 
 # script 1 : imagenet_dataset.py
