@@ -35,7 +35,32 @@ This class inherits from torch.utils.data.Dataset (reference 1).
 
         
 
+# Resources for using icme-gpu:
+## Job description sprint to submit a job to slurm:
+Name this file "submit.sh" containing following lines and run "sbatch submit.sh" in terminal. This will send you an email when the job is done or failed. 
+```
+#!/bin/bash
+#SBATCH --job-name=gputest1
+# Get email notification when job finishes or fails
+#SBATCH --mail-type=END,FAIL # notifications for job done & fail
+#SBATCH --mail-user=<sunetid>@stanford.edu
+# Define how long you job will run d-hh:mm:ss
+#SBATCH --time 02:00:00
+# GPU jobs require you to specify partition
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1 
+#SBATCH --mem=16G
+# Number of tasks
+#SBATCH --ntasks=1 
+#SBATCH --cpus-per-task=8
+```
+### Other slurm resources(check reference 4) :
+1) squeue -u <user_name> : checks status of the jobs for this user.
+2) squeue <job_id> : checks status of a particular job.
+3) slurm-<job_id>.out : log of output.
+
 # References:
 1) https://pytorch.org/docs/stable/data.html - see torch.utils.data.Dataset
 2) https://arxiv.org/abs/1807.03748
 3) https://arxiv.org/abs/1905.09272
+4) https://srcc.stanford.edu/sge-slurm-conversion
