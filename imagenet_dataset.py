@@ -71,10 +71,14 @@ class ImageNetDataset(Dataset):
 
         if img.mode == 'L':
             tr = transforms.Grayscale(num_output_channels=3)
-            img = tr(img)
+            np_img = img.numpy()
+            torch_img = torch.from_numpy(np_img)
+            img = tr(torch_img)
 
         tr = transforms.ToTensor()
-        img1 = tr(img)
+        np_img = img.numpy()
+        torch_img = torch.from_numpy(np_img)
+        img = tr(torch_img)
 
         width, height = img.size
         if min(width, height)>IMG_SIZE[0] * 1.5:
@@ -110,51 +114,51 @@ class ImageNetDataset(Dataset):
         return self.classes[class_idx]['class_name']
 
 
-def get_imagenet_datasets(data_path, train_split = 0.9, num_classes = None, random_seed = None):
+def get_imagenet_datasets(data_path, is_train, train_split = 0.9, num_classes = None, random_seed = None):
 
     if random_seed == None:
         random_seed = int(time.time())
 
-    dataset_train = ImageNetDataset(data_path,is_train = True, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
-    dataset_test = ImageNetDataset(data_path, is_train = False, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
+    dataset = ImageNetDataset(data_path,is_train, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
 
-    return dataset_train, dataset_test
+    return dataset
 
-#
-# data_path = "/Users/martinsf/data/images_1/imagenet_images/"
-# dataset_train, dataset_test = get_imagenet_datasets(data_path)
-#
-# print(f"Number of train samplest {dataset_train.__len__()}")
-# print(f"Number of samples in test split {dataset_test.__len__()}")
-#
-# BATCH_SIZE = 200
-#
-# data_loader_train = DataLoader(dataset_train, BATCH_SIZE, shuffle = True)
-# data_loader_test = DataLoader(dataset_test, BATCH_SIZE, shuffle = True)
-#
-#
-# import matplotlib.pyplot as plt
-#
-# fig, axes = plt.subplots(BATCH_SIZE//20,20, figsize=(6,10))
-#
-# for batch in data_loader_train:
-#
-#     print(f"Shape of batch['image'] {batch['image'].shape}")
-#     print(f"Shape of batch['cls'] {batch['cls'].shape}")
-#
-#     for i in range(BATCH_SIZE):
-#
-#         col = i % 20
-#         row = i // 20
-#
-#         img = batch['image'][i].numpy()
-#
-#         axes[row,col].set_axis_off()
-#         #axes[row,col].set_title(batch['class_name'][i])
-#         axes[row,col].imshow(np.transpose(img,(1,2,0)))
-#
-#     plt.show()
-#
-#     break
+## test this script
 
+data_path_train = "/Users/martinsf/data/images_1/imagenet_images/"
+data_path_test = ""
 
+dataset_train = get_imagenet_datasets(data_path_train)
+dataset_train = get_imagenet_datasets(data_path_test)
+
+print(f"Number of train samplest {dataset_train.__len__()}")
+print(f"Number of samples in test split {dataset_test.__len__()}")
+
+BATCH_SIZE = 200
+
+data_loader_train = DataLoader(dataset_train, BATCH_SIZE, shuffle = True)
+data_loader_test = DataLoader(dataset_test, BATCH_SIZE, shuffle = True)
+
+## visualise
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(BATCH_SIZE//20, 20, figsize=(6,10))
+
+for batch in data_loader_train:
+
+    print(f"Shape of batch['image'] {batch['image'].shape}")
+    print(f"Shape of batch['cls'] {batch['cls'].shape}")
+
+    for i in range(BATCH_SIZE):
+        col = i % 20
+        row = i // 20
+
+        img = batch['image'][i].numpy()
+
+        axes[row,col].set_axis_off()
+        #axes[row,col].set_title(batch['class_name'][i])
+        axes[row,col].imshow(np.transpose(img,(1,2,0)))
+
+    plt.show()
+
+    break
