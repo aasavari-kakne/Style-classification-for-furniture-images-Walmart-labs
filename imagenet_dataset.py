@@ -114,20 +114,25 @@ class ImageNetDataset(Dataset):
         return self.classes[class_idx]['class_name']
 
 
-def get_imagenet_datasets(data_path, train_split = 0.9, num_classes = None, random_seed = None):
+def get_imagenet_datasets(data_path, train_split = 1.0, num_classes = None, random_seed = None):
 
     if random_seed == None:
         random_seed = int(time.time())
-
-    dataset_train = ImageNetDataset(data_path,is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
-    datset_test = ImageNetDataset(data_path,is_train=False, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
-    return dataset_train, dataset_test
+    
+    data_path_train = data_path + '/train'
+    data_path_test  = data_path + '/test'
+    data_path_val   = data_path + '/validation'
+    
+    dataset_train = ImageNetDataset(data_path_train, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
+    dataset_test  = ImageNetDataset(data_path_test, is_train=False, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
+    dataset_val   = ImageNetDataset(data_path_val, is_train=False, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
+    return dataset_train, dataset_test, dataset_val
 
 ## test this script
 
-data_path = "/Users/martinsf/data/images_1/imagenet_images/"
+data_path = "/Xplore/tagged"
 
-dataset_train, dataset_test = get_imagenet_datasets(data_path)
+dataset_train, dataset_test, dataset_val = get_imagenet_datasets(data_path)
 
 print(f"Number of train samplest {dataset_train.__len__()}")
 print(f"Number of samples in test split {dataset_test.__len__()}")
