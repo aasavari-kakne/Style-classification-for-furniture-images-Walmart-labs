@@ -114,22 +114,20 @@ class ImageNetDataset(Dataset):
         return self.classes[class_idx]['class_name']
 
 
-def get_imagenet_datasets(data_path, is_train, train_split = 0.9, num_classes = None, random_seed = None):
+def get_imagenet_datasets(data_path, train_split = 0.9, num_classes = None, random_seed = None):
 
     if random_seed == None:
         random_seed = int(time.time())
 
-    dataset = ImageNetDataset(data_path,is_train, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
-
-    return dataset
+    dataset_train = ImageNetDataset(data_path,is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
+    datset_test = ImageNetDataset(data_path,is_train=False, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
+    return dataset_train, dataset_test
 
 ## test this script
 
-data_path_train = "/Users/martinsf/data/images_1/imagenet_images/"
-data_path_test = ""
+data_path = "/Users/martinsf/data/images_1/imagenet_images/"
 
-dataset_train = get_imagenet_datasets(data_path_train)
-dataset_train = get_imagenet_datasets(data_path_test)
+dataset_train, dataset_test = get_imagenet_datasets(data_path)
 
 print(f"Number of train samplest {dataset_train.__len__()}")
 print(f"Number of samples in test split {dataset_test.__len__()}")
