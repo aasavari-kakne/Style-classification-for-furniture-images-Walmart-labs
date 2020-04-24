@@ -62,8 +62,34 @@ Name this file "submit.sh" containing following lines and run "sbatch submit.sh"
 2) squeue <job_id> : checks status of a particular job.
 3) slurm-<job_id>.out : log of output.
 
+# Regarding git:
+
+## Pulling a git repo on local machine:
+In terminal run the following commands
+1. $mkdir dir
+2. $cd dir
+3. $git init
+4. $git clone <link_to_github_repo>
+
+## Pulling a git repo on icme-gpu server:
+In terminal, run the following commands
+1. $ssh -Y <sunet_id>@icme-gpu.stanford.edu
+2. $git clone <link_to_github_repo>
+
+## Other useful git commands:
+1. git status - helps to see where the local branch is compared to master. 
+2. git diff - helps see what changes have been made locally to the files in the repo. 
+3. git commit -am "message" - commits local changes
+4. git push origin master - push local changes to master
+5. git pull origin master - pull master to local.
+
 # References:
 1) https://pytorch.org/docs/stable/data.html - see torch.utils.data.Dataset
 2) https://arxiv.org/abs/1807.03748
 3) https://arxiv.org/abs/1905.09272
 4) https://srcc.stanford.edu/sge-slurm-conversion
+
+
+
+# Questions:
+1) Line 81 in imagenet_datsets.py: changed img1 to img, because img1 was not being used in rest of the script. 
