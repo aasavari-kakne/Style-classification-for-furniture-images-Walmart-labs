@@ -94,5 +94,7 @@ In terminal, run the following commands
 # Questions, comments and notes:
 ## Imagenet_datasets.py:
 1) Line 81 in imagenet_datsets.py: changed img1 to img, because img1 was not being used in rest of the script. 
+   [Yuan: img1 should not be changed to img, otherwise the code doesn't work]
 2) I have tried changing tensorflow tensor to numpy array and then to torch tensor. Hopefully it will work. 
+   [Yuan Question:why do we want to do this? This conversion does not work.]
 3) When running training, comment out everything after the functions. It is just for sanity check that the datasets are what we need. 
