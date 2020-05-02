@@ -83,7 +83,7 @@ In terminal, run the following commands
 4. git push origin master - push local changes to master
 5. git pull origin master - pull master to local.
 
-#Local Testing Using Google Colab
+# Local Testing Using Google Colab
 1.All tagged images and code are stored in "xplore-walmart/Xplore-master". Run "main.ipynb", which is a ipynb version of "main.py ".
 
 # References:
