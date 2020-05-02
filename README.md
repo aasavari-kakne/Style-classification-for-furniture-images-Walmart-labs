@@ -61,6 +61,7 @@ Name this file "submit.sh" containing following lines and run "sbatch submit.sh"
 1) squeue -u <user_name> : checks status of the jobs for this user.
 2) squeue <job_id> : checks status of a particular job.
 3) slurm-<job_id>.out : log of output.
+4) sinfo: check the PARTITION/AVAIL/TIMELIM/NODES/STATE/NODELIST (written in job-slurm.sh)
 
 # Regarding git:
 
