@@ -78,7 +78,7 @@ class ImageNetDataset(Dataset):
         tr = transforms.ToTensor()
         np_img = img.numpy()
         torch_img = torch.from_numpy(np_img)
-        img = tr(torch_img)
+        img2 = tr(torch_img)
 
         width, height = img.size
         if min(width, height)>IMG_SIZE[0] * 1.5:
