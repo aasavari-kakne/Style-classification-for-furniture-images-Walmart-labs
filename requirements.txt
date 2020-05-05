@@ -103,9 +103,7 @@ Sphinx==1.6.7
 sqlparse==0.2.4              
 ssh-import-id==5.7                
 systemd-python==234                
-Tempita==0.5.2              
-torch==1.4.0              
-torchvision==0.5.0              
+Tempita==0.5.2                            
 Twisted==17.9.0             
 ufw==0.36               
 unattended-upgrades==0.1                
