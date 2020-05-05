@@ -23,7 +23,7 @@ def run_classificator(args, res_classificator_model, res_encoder_model, models_s
 
     # params = list(res_classificator_model.parameters()) + list(res_encoder_model.parameters())
     optimizer_enc = torch.optim.Adam(params = res_encoder_model.parameters(), lr = 0.00001) # Train encoder slower than the classifier layers
-    optimizer_cls = torch.optim.Adam(params = res_classificator_model.parameters(), lr = 0.001)
+    optimizer_cls = torch.optim.Adam(params = res_classificator_model.parameters(), lr = 0.0001)
 
     best_epoch_test_loss = 1e10
 
