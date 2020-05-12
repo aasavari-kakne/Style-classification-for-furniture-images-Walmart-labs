@@ -13,3 +13,8 @@
 # Number of tasks
 #SBATCH --ntasks=1 
 #SBATCH --cpus-per-task=8
+# run the application
+cd ./Xplore-master
+module load python3
+srun -N 1 python3 ./main.py > output_$job1_output.txt
+
