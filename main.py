@@ -23,17 +23,14 @@ parser.add_argument('-mode', default=mode2 , type=str)
 parser.add_argument('-image_folder', default='tagged', type=str)
 parser.add_argument('-num_classes', default=16, type=int)
 #encoder_path=...
-encoder_path="/Users/julie/Desktop/Walmart Lab/cpc/model_images/Context_Pred_Training_model_run_7/best_res_ecoder_weights.pt"
-parser.add_argument('-batch_size', default=2, type=int)
+encoder_path="best_res_ecoder_weights_untagged.pt"
+parser.add_argument('-batch_size', default=16, type=int)
 parser.add_argument('-sub_batch_size', default=2, type=int)
 parser.add_argument('-num_random_patches', default=15, type=int)
-# cpu or cuda
-#parser.add_argument('-device', default='cuda', type=str)
-parser.add_argument('-device', default='cpu', type=str)
-####added by Yuan
-#FCUDos.environ["CUDA_VISIBLE_DEVICES"] = '0'
-#os.environ["CUDA_VISIBLE_DEVICES"]="5"
-###
+'''cpu or cuda'''
+parser.add_argument('-device', default='cuda', type=str)
+#parser.add_argument('-device', default='cpu', type=str)
+
 
 args, args_other = parser.parse_known_args()
 
@@ -88,9 +85,10 @@ if args.mode == 'train_classificator':
 
     if res_encoder_weights_path:
         print("Loading res encoder weights from {}".format(res_encoder_weights_path))
-        '''change when use cuda'''
-        #res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path))
-        res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path,map_location=lambda storage, loc: storage))
+        '''change to when use cuda'''
+        res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path))
+        '''change to when use cpu'''
+        #res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path,map_location=lambda storage, loc: storage))
 
     if res_classificator_weights_path:
         print("Loading classificator weights from {}".format(res_classificator_weights_path))
