@@ -2,6 +2,13 @@ import torch
 import os
 import random
 import csv
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import itertools
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
+import pandas as pd
 
 def dot_norm_exp(a,b):
     dot = torch.sum(a * b, dim=1)
@@ -39,7 +46,7 @@ def inspect_model(model):
 
 def get_next_model_folder(prefix, path = ''):
 
-    model_folder = lambda prefix, run_idx: f"{prefix}_model_run_{run_idx}"
+    model_folder = lambda prefix, run_idx: "{}_model_run_{}".format(prefix,run_idx)
 
     run_idx = 1
     while os.path.isdir(os.path.join(path, model_folder(prefix, run_idx))):
@@ -129,4 +136,75 @@ def write_csv_stats(csv_path, stats_dict):
     with open(csv_path, "a") as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(stats_dict.values())
+
+def plot_confusion_matrix(cm, classes,name, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt), horizontalalignment="center", color="white" if cm[i, j] > thresh else "black")
+
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.show()
+    plt.savefig(name)
+
+def plot_acc_loss_classificator(data_csv,data_path='./'):
+  df = pd.read_csv(data_csv)
+  epoch_ls=[int(val) for val in list(df['epoch'])]
+  train_acc_ls=[float(val) for val in list(df['train_acc'])]
+  train_loss_ls=[float(val) for val in list(df['train_loss'])]
+  test_acc_ls=[float(val) for val in list(df['test_acc'])]
+  test_loss_ls=[float(val) for val in list(df['test_loss'])]
+
+  #plt.figure(figsize=(16,10))
+  plt.plot(epoch_ls,train_acc_ls)
+  plt.plot(epoch_ls,test_acc_ls)
+  plt.title('classificator accuracy (epoch)')
+  plt.ylabel('accuracy')
+  plt.xlabel("epoch")
+  plt.legend(['train acc', 'test acc'], loc='upper left')
+  plt.show()
+  # plt.savefig(data_path+'classificator_acc.png')
+  plt.plot(epoch_ls,train_loss_ls)
+  plt.plot(epoch_ls,test_loss_ls)
+  plt.title('classificator loss (epoch)')
+  plt.ylabel('loss')
+  plt.xlabel("epoch")
+  plt.legend(['train loss', 'test loss'], loc='upper left')
+  #plt.savefig(data_path+'classificator_loss.png')
+  plt.show()
+
+
+def plot_loss_for_cpc(data_loss_csv,data_path='./'):
+  df = pd.read_csv(data_loss_csv)
+  mean_batch_loss=[float(val[:-1].split("(")[1]) for val in list(df['batch_loss'])]
+  sum_batch_loss=[float(val[:-1].split("(")[1]) for val in list(df['sum_batch_loss'])]
+
+  plt.plot(mean_batch_loss)
+  plt.title('mean batch loss of cpc (iteration)')
+  plt.ylabel('mean batch loss')
+  plt.xlabel("iteration")
+  plt.show()
+  # plt.savefig(os.path.join(data_path,'cpc_mean_batch_loss.jpg'))
+  plt.plot(sum_batch_loss)
+  plt.title('sum batch loss of cpc (iteration)')
+  plt.ylabel('sum batch loss')
+  plt.xlabel("iteration")
+  plt.show()
+  #plt.savefig(os.path.join(data_path,'cpc_sum_batch_loss.jpg'))
 

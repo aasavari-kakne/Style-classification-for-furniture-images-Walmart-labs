@@ -53,7 +53,7 @@ class ResEncoderModel(Module):
                     is_downsampling_block = True
 
                 resnet_block.add_module(
-                    f'conv_{conv_block_idx}',
+                    'conv_{}'.format(conv_block_idx),
                     ResNetBottleneckBlock(
                         in_channels_block = current_channels,
                         is_downsampling_block = is_downsampling_block
@@ -107,10 +107,10 @@ class ContextPredictionModel(Module):
         self.context_conv = nn.Sequential()
 
         for layer_idx in range(self.context_layers):
-            self.context_conv.add_module(f'batch_norm_{layer_idx}',nn.BatchNorm2d(self.in_channels)),
-            self.context_conv.add_module(f'relu_{layer_idx}',nn.ReLU())
+            self.context_conv.add_module('batch_norm_{}'.format(layer_idx),nn.BatchNorm2d(self.in_channels)),
+            self.context_conv.add_module('relu_{}'.format(layer_idx),nn.ReLU())
             self.context_conv.add_module(
-                f'conv2d_{layer_idx}',
+                'conv2d_{}'.format(layer_idx),
                 nn.Conv2d(
                     in_channels = self.in_channels,
                     out_channels = self.in_channels,
@@ -235,7 +235,7 @@ class ResClassificatorModel(Module):
         self.res_blocks = nn.Sequential()
         for i in range(self.num_res_blocks-1):
             self.res_blocks.add_module(
-                f'res_block_{i}',
+                'res_block_{}'.format(i),
                 SE_ResNetBottleneckBlock_renorm(
                     in_channels_block = self.channels,
                 )

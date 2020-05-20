@@ -61,44 +61,9 @@ Name this file "submit.sh" containing following lines and run "sbatch submit.sh"
 1) squeue -u <user_name> : checks status of the jobs for this user.
 2) squeue <job_id> : checks status of a particular job.
 3) slurm-<job_id>.out : log of output.
-4) sinfo: check the PARTITION/AVAIL/TIMELIM/NODES/STATE/NODELIST (written in job-slurm.sh)
-
-# Regarding git:
-
-## Pulling a git repo on local machine:
-In terminal run the following commands
-1. $mkdir dir
-2. $cd dir
-3. $git init
-4. $git clone <link_to_github_repo>
-
-## Pulling a git repo on icme-gpu server:
-In terminal, run the following commands
-1. $ssh -Y <sunet_id>@icme-gpu.stanford.edu
-2. $git clone <link_to_github_repo>
-
-## Other useful git commands:
-1. git status - helps to see where the local branch is compared to master. 
-2. git diff - helps see what changes have been made locally to the files in the repo. 
-3. git commit -am "message" - commits local changes
-4. git push origin master - push local changes to master
-5. git pull origin master - pull master to local.
-
-# Local Testing Using Google Colab
-1.All tagged images and code are stored in "xplore-walmart/Xplore-master". Run "main.ipynb", which is a ipynb version of "main.py ".
 
 # References:
 1) https://pytorch.org/docs/stable/data.html - see torch.utils.data.Dataset
 2) https://arxiv.org/abs/1807.03748
 3) https://arxiv.org/abs/1905.09272
 4) https://srcc.stanford.edu/sge-slurm-conversion
-
-
-
-# Questions, comments and notes:
-## Imagenet_datasets.py:
-1) Line 81 in imagenet_datsets.py: changed img1 to img, because img1 was not being used in rest of the script. 
-   [Yuan: img1 should not be changed to img, otherwise the code doesn't work]
-2) I have tried changing tensorflow tensor to numpy array and then to torch tensor. Hopefully it will work. 
-   [Yuan Question:why do we want to do this? This conversion does not work.]
-3) When running training, comment out everything after the functions. It is just for sanity check that the datasets are what we need. 

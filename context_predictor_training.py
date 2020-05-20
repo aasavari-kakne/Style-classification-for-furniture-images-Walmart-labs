@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from imagenet_dataset import get_imagenet_datasets
 from helper_functions import dot, dot_norm, dot_norm_exp, norm_euclidian, get_random_patches, get_patch_tensor_from_image_batch
 from helper_functions import write_csv_stats
+from sklearn.metrics import confusion_matrix
 
 def run_context_predictor(args, res_encoder_model, context_predictor_model, models_store_path):
 
@@ -13,7 +14,10 @@ def run_context_predictor(args, res_encoder_model, context_predictor_model, mode
 
     stats_csv_path = os.path.join(models_store_path, "pred_stats.csv")
 
-    dataset_train, dataset_test = get_imagenet_datasets(args.image_folder, num_classes = args.num_classes)
+    dataset_train, dataset_test,_ = get_imagenet_datasets(args.image_folder, num_classes = args.num_classes,mode="cpc")
+    '''for tagged only'''
+    #dataset_train, dataset_test,_ = get_imagenet_datasets(args.image_folder, num_classes = args.num_classes,mode="cpc")
+
 
     def get_random_patch_loader():
         return DataLoader(dataset_train, args.num_random_patches, shuffle=True)
@@ -102,6 +106,7 @@ def run_context_predictor(args, res_encoder_model, context_predictor_model, mode
             print(f"{datetime.datetime.now()} Loss: {batch_loss}")
             print(f"{datetime.datetime.now()} SUM Loss: {sum_batch_loss}")
 
+
             torch.save(res_encoder_model.state_dict(), os.path.join(models_store_path, "last_res_ecoder_weights.pt"))
             torch.save(context_predictor_model.state_dict(), os.path.join(models_store_path, "last_context_predictor_weights.pt"))
 
@@ -112,6 +117,7 @@ def run_context_predictor(args, res_encoder_model, context_predictor_model, mode
 
             for key, cos_similarity_tensor in z_vect_similarity.items():
                 print(f"Mean cos_sim for class {key} is {cos_similarity_tensor.mean()} . Number: {cos_similarity_tensor.size()}")
+
 
             z_vect_similarity = dict()
 

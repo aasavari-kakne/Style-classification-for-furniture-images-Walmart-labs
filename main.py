@@ -12,24 +12,37 @@ import os
 
 parser = argparse.ArgumentParser(description='Contrastive predictive coding params')
 
-# mode = 'train_encoder_context_prediction'
-# mode = 'train_classificator'
-parser.add_argument('-mode', default='train_classificator' , type=str)
-parser.add_argument('-image_folder', default='', type=str)
-parser.add_argument('-num_classes', default=10, type=int)
-parser.add_argument('-batch_size', default=16, type=int)
+mode1 = 'train_encoder_context_prediction'
+mode2 = 'train_classificator'
+'''for mode1'''
+# parser.add_argument('-mode', default=mode1 , type=str)
+# parser.add_argument('-image_folder', default='images', type=str)
+# parser.add_argument('-num_classes', default=16, type=int)
+'''for mode2'''
+parser.add_argument('-mode', default=mode2 , type=str)
+parser.add_argument('-image_folder', default='tagged', type=str)
+parser.add_argument('-num_classes', default=16, type=int)
+#encoder_path=...
+encoder_path="/Users/julie/Desktop/Walmart Lab/cpc/model_images/Context_Pred_Training_model_run_7/best_res_ecoder_weights.pt"
+parser.add_argument('-batch_size', default=2, type=int)
 parser.add_argument('-sub_batch_size', default=2, type=int)
 parser.add_argument('-num_random_patches', default=15, type=int)
 # cpu or cuda
-parser.add_argument('-device', default='cuda', type=str)
+#parser.add_argument('-device', default='cuda', type=str)
+parser.add_argument('-device', default='cpu', type=str)
+####added by Yuan
+#FCUDos.environ["CUDA_VISIBLE_DEVICES"] = '0'
+#os.environ["CUDA_VISIBLE_DEVICES"]="5"
+###
 
 args, args_other = parser.parse_known_args()
 
-print(f"Running CPC with args {args}")
+print("Running CPC with args {}".format(args))
+
 
 Z_DIMENSIONS = 1024
 
-stored_models_root_path = "models"
+stored_models_root_path = "models_images"
 if not os.path.isdir(stored_models_root_path):
     os.mkdir(stored_models_root_path)
 
@@ -49,19 +62,19 @@ if args.mode == 'train_encoder_context_prediction':
     os.mkdir(model_store_folder)
 
     if res_encoder_weights_path:
-        print(f"Loading res encoder weights from {res_encoder_weights_path}")
+        print("Loading res encoder weights from {}".format(res_encoder_weights_path))
         res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path))
 
     if context_predictor_weights_path:
-        print(f"Loading context predictor weights from {context_predictor_weights_path}")
+        print("Loading context predictor weights from {}".format(context_predictor_weights_path))
         context_predictor_model.load_state_dict(torch.load(context_predictor_weights_path))
 
     run_context_predictor(args, res_encoder_model, context_predictor_model, model_store_folder)
 
 
 if args.mode == 'train_classificator':
-
-    res_encoder_weights_path = None
+    ##encoder model
+    res_encoder_weights_path = encoder_path
     res_classificator_weights_path = None
 
     res_encoder_model = ResEncoderModel().to(args.device)
@@ -74,12 +87,13 @@ if args.mode == 'train_classificator':
     os.mkdir(model_store_folder)
 
     if res_encoder_weights_path:
-        print(f"Loading res encoder weights from {res_encoder_weights_path}")
-        res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path))
+        print("Loading res encoder weights from {}".format(res_encoder_weights_path))
+        '''change when use cuda'''
+        #res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path))
+        res_encoder_model.load_state_dict(torch.load(res_encoder_weights_path,map_location=lambda storage, loc: storage))
 
     if res_classificator_weights_path:
-        print(f"Loading classificator weights from {res_classificator_weights_path}")
+        print("Loading classificator weights from {}".format(res_classificator_weights_path))
         res_classificator_model.load_state_dict(torch.load(res_classificator_weights_path))
 
     run_classificator(args, res_classificator_model, res_encoder_model, model_store_folder)
-

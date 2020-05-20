@@ -1,11 +1,15 @@
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset,DataLoader
 from torchvision import transforms
 import os
 import numpy as np
 import time
 from PIL import Image
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 
 IMG_SIZE = (256,256)
+ClASS_LIST=[]
 
 class ImageNetDataset(Dataset):
     def __init__(self, data_path, is_train, train_split = 0.9, random_seed = 42, target_transform = None, num_classes = None):
@@ -29,6 +33,7 @@ class ImageNetDataset(Dataset):
                    class_name = class_name,
                ))
             class_idx += 1
+            ClASS_LIST.append(class_name)
 
             if self.is_classes_limited:
                 if class_idx == self.num_classes:
@@ -42,6 +47,8 @@ class ImageNetDataset(Dataset):
             class_path = os.path.join(data_path, cls['class_name'])
             for image_name in os.listdir(class_path):
                 image_path = os.path.join(class_path, image_name)
+                '''debug!!!!'''
+#                print(image_name)
                 self.image_list.append(dict(
                     cls = cls,
                     image_path = image_path,
@@ -58,46 +65,53 @@ class ImageNetDataset(Dataset):
             self.img_idxes = self.img_idxes[:last_train_sample]
         else:
             self.img_idxes = self.img_idxes[last_train_sample:]
+        #self.img_idxes = self.img_idxes[:last_train_sample]
 
     def __len__(self):
         return len(self.img_idxes)
 
     def __getitem__(self, index):
+        try:
+            img_idx = self.img_idxes[index]
+            img_info = self.image_list[img_idx]
 
-        img_idx = self.img_idxes[index]
-        img_info = self.image_list[img_idx]
+            img = Image.open(img_info['image_path'])
+            #print(img_info['image_path'])
 
-        img = Image.open(img_info['image_path'])
+            if img.mode == 'L':
+                tr = transforms.Grayscale(num_output_channels=3)
+                img = tr(img)
 
-        if img.mode == 'L':
-            tr = transforms.Grayscale(num_output_channels=3)
-            np_img = img.numpy()
-            torch_img = torch.from_numpy(np_img)
-            img = tr(torch_img)
+            tr = transforms.ToTensor()
+            img1 = tr(img)
+            
+            ###test
+    #        print(img1.size)
+    #        print(img.size)
+            ###
+            
+            width, height = img.size
+            if min(width, height)>IMG_SIZE[0] * 1.5:
+                tr = transforms.Resize((int(IMG_SIZE[0] * 1.5),int(IMG_SIZE[1] * 1.5)))
+                img = tr(img)
 
-        tr = transforms.ToTensor()
-        np_img = img.numpy()
-        torch_img = torch.from_numpy(np_img)
-        img2 = tr(torch_img)
+            width, height = img.size
+            if min(width, height)<IMG_SIZE[0]:
+                tr = transforms.Resize(IMG_SIZE)
+                img = tr(img)
 
-        width, height = img.size
-        if min(width, height)>IMG_SIZE[0] * 1.5:
-            tr = transforms.Resize(int(IMG_SIZE[0] * 1.5))
+            tr = transforms.RandomCrop(IMG_SIZE)
             img = tr(img)
 
-        width, height = img.size
-        if min(width, height)<IMG_SIZE[0]:
-            tr = transforms.Resize(IMG_SIZE)
+            tr = transforms.ToTensor()
             img = tr(img)
 
-        tr = transforms.RandomCrop(IMG_SIZE)
-        img = tr(img)
-
-        tr = transforms.ToTensor()
-        img = tr(img)
-
-        if (img.shape[0] != 3):
-            img = img[0:3]
+            if (img.shape[0] != 3):
+                img = img[0:3]
+        except Exception as e:
+            print(e)
+            print(img_info['image_path'])
+            pass
 
         return dict(image = img, cls = img_info['cls']['class_idx'], class_name = img_info['cls']['class_name'])
 
@@ -114,54 +128,63 @@ class ImageNetDataset(Dataset):
         return self.classes[class_idx]['class_name']
 
 
-def get_imagenet_datasets(data_path, train_split = 1.0, num_classes = None, random_seed = None):
+
+def get_imagenet_datasets(data_path,mode, train_split = 0.8, num_classes = None, random_seed = None):
 
     if random_seed == None:
         random_seed = int(time.time())
-    
-    data_path_train = data_path + '/train'
-    data_path_test  = data_path + '/test'
-    data_path_val   = data_path + '/validation'
-    
-    dataset_train = ImageNetDataset(data_path_train, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
-    dataset_test  = ImageNetDataset(data_path_test, is_train=False, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
-    dataset_val   = ImageNetDataset(data_path_val, is_train=False, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
-    return dataset_train, dataset_test, dataset_val
 
-## test this script
+    if mode=="cpc":
+        dataset_train = ImageNetDataset(data_path,is_train = True, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
+        dataset_test = ImageNetDataset(data_path, is_train = False, random_seed=random_seed, num_classes = num_classes, train_split=train_split)
+        dataset_val=[]
+        return dataset_train, dataset_test, dataset_val
+    else:
+        data_path_train = data_path + '/train/'
+        data_path_test  = data_path + '/test/'
+        data_path_val   = data_path + '/validation/'
+        dataset_train = ImageNetDataset(data_path_train, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
+        dataset_test  = ImageNetDataset(data_path_test, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
+        dataset_val   = ImageNetDataset(data_path_val, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
+        return dataset_train, dataset_test, dataset_val
 
-data_path = "/Xplore/tagged"
 
-dataset_train, dataset_test, dataset_val = get_imagenet_datasets(data_path)
 
-print(f"Number of train samplest {dataset_train.__len__()}")
-print(f"Number of samples in test split {dataset_test.__len__()}")
+#'''test corrupted images'''
+#data_path = "/Users/julie/Desktop/Walmart Lab/data/images/"
+#dataset_train, dataset_test = get_imagenet_datasets(data_path)
+#
+#print(f"Number of train samplest {dataset_train.__len__()}")
+#print(f"Number of samples in test split {dataset_test.__len__()}")
+#
+#BATCH_SIZE = 200
+#
+#data_loader_train = DataLoader(dataset_train, BATCH_SIZE, shuffle = True)
+#data_loader_test = DataLoader(dataset_test, BATCH_SIZE, shuffle = True)
+#
+#
+#import matplotlib.pyplot as plt
+#
+#fig, axes = plt.subplots(BATCH_SIZE//20,20, figsize=(6,10))
+#
+#for batch in data_loader_train:
+#
+#    print(f"Shape of batch['image'] {batch['image'].shape}")
+#    print(f"Shape of batch['cls'] {batch['cls'].shape}")
+#
+#    for i in range(BATCH_SIZE):
+#
+#        col = i % 20
+#        row = i // 20
+#
+#        img = batch['image'][i].numpy()
+#
+#        axes[row,col].set_axis_off()
+#        #axes[row,col].set_title(batch['class_name'][i])
+#        axes[row,col].imshow(np.transpose(img,(1,2,0)))
+#
+#    plt.show()
+#
+#    break
 
-BATCH_SIZE = 200
 
-data_loader_train = DataLoader(dataset_train, BATCH_SIZE, shuffle = True)
-data_loader_test = DataLoader(dataset_test, BATCH_SIZE, shuffle = True)
-
-## visualise
-import matplotlib.pyplot as plt
-
-fig, axes = plt.subplots(BATCH_SIZE//20, 20, figsize=(6,10))
-
-for batch in data_loader_train:
-
-    print(f"Shape of batch['image'] {batch['image'].shape}")
-    print(f"Shape of batch['cls'] {batch['cls'].shape}")
-
-    for i in range(BATCH_SIZE):
-        col = i % 20
-        row = i // 20
-
-        img = batch['image'][i].numpy()
-
-        axes[row,col].set_axis_off()
-        #axes[row,col].set_title(batch['class_name'][i])
-        axes[row,col].imshow(np.transpose(img,(1,2,0)))
-
-    plt.show()
-
-    break
