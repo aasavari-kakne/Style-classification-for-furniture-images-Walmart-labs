@@ -62,6 +62,10 @@ Name this file "submit.sh" containing following lines and run "sbatch submit.sh"
 2) squeue <job_id> : checks status of a particular job.
 3) slurm-<job_id>.out : log of output.
 
+# Data Cleaning:
+1) clean all ".gif" and ".png files"
+2) for ".jpg", refer to "corrupted_images.xlsx
+
 # References:
 1) https://pytorch.org/docs/stable/data.html - see torch.utils.data.Dataset
 2) https://arxiv.org/abs/1807.03748
