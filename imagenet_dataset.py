@@ -83,11 +83,6 @@ class ImageNetDataset(Dataset):
             tr = transforms.ToTensor()
             img1 = tr(img)
             
-            ###test
-    #        print(img1.size)
-    #        print(img.size)
-            ###
-            
             width, height = img.size
             if min(width, height)>IMG_SIZE[0] * 1.5:
                 tr = transforms.Resize((int(IMG_SIZE[0] * 1.5),int(IMG_SIZE[1] * 1.5)))
