@@ -19,7 +19,7 @@ PyTorch can throw errors for images in "untagged" folder. Do -
 In main.py on line 74 and 75, specify the path to .pt files containing weights. 
 
 ## Changing size of training and testing data
-In imagenet_dataset.py on line 139, 140 and 141 change parameter "train_split". This parameter decides what percentage of the images in a paerticular directory (train, test , validation) will used to create the correspaonding dataset. 
+In imagenet_dataset.py on line 139, 140 and 141 change parameter "train_split". This parameter decides what percentage of the images in a particular directory (train, test , validation) will used to create the correspaonding dataset. 
 
 > Ideally, we should use full training and testing data. 
 > We are not using the validation dataset for now. In future, we can merge that into training data. 
