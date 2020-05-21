@@ -47,8 +47,6 @@ class ImageNetDataset(Dataset):
             class_path = os.path.join(data_path, cls['class_name'])
             for image_name in os.listdir(class_path):
                 image_path = os.path.join(class_path, image_name)
-                '''debug!!!!'''
-#                print(image_name)
                 self.image_list.append(dict(
                     cls = cls,
                     image_path = image_path,
