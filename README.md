@@ -5,11 +5,9 @@ See more details in this [blog post](https://mf1024.github.io/2019/05/27/contras
 ## Dependecies:
 Run ```pip3 install -r requirements.txt``` and then 
 1. Install PyTorch using following instructions. 
-> pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html
->
-or 
-> conda install -c pytorch torchvision
->
+``` pip3 install torch===1.4.0 torchvision===0.5.0 -f https://download.pytorch.org/whl/torch_stable.html ```
+or
+``` conda install -c pytorch torchvision ```
 2. Always use pip3 and python3 commands. 
 
 ## Data Cleaning:
