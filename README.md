@@ -22,7 +22,10 @@ In main.py on line 74 and 75, specify the path to .pt files containing weights.
 In imagenet_dataset.py on line 139, 140 and 141 change parameter "train_split". This parameter decides what percentage of the images in a particular directory (train, test , validation) will used to create the correspaonding dataset. 
 
 > Ideally, we should use full training and testing data. 
-> We are not using the validation dataset for now. In future, we can merge that into training data. 
+> 
+> We are not using the validation dataset for now. 
+>
+> In future, we can merge that into training data. 
 
 ## Learning rates
 In classificator_training.py on line 33 and 34, edit the learning rates for encoder and classifier respectively. 
