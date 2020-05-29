@@ -205,7 +205,11 @@ class ContextPredictionModel(Module):
         ret = torch.cat(all_predictions, dim = 0), torch.cat(all_loc, dim = 0)
 
         return ret
-
+class Flatten(nn.Module):
+  def __init__(self):
+    super(Flatten, self).__init__()
+  def forward(self, x):
+    return x.view(x.size(0), -1)
 
 class ResClassificatorModel(Module):
 
@@ -242,21 +246,37 @@ class ResClassificatorModel(Module):
             )
 
         self.avg_pool = nn.AdaptiveAvgPool2d(output_size=1)
-        self.linear = nn.Linear(
-            in_features = self.channels,
+        # self.linear = nn.Linear(
+        #     in_features = self.channels,
+        #     out_features = self.num_classes
+        # )
+        self.flatten=Flatten()
+        self.linear1 = nn.Linear(
+            in_features = self.channels*7*7,
             out_features = self.num_classes
         )
+        # self.prep = nn.Sequential(
+        #   nn.BatchNorm1d(128),
+        #     nn.LeakyReLU())
+        # self.linear2 = nn.Linear(
+        #     in_features = 128,
+        #     out_features = self.num_classes
+        # )
+
 
         self.softmax = nn.Softmax(dim=1)
 
 
     def forward(self, x):
-        x = self.prep.forward(x)
-        x = self.res_blocks.forward(x)
-        x = self.avg_pool.forward(x)
-        x = x.squeeze(dim=3)
-        x = x.squeeze(dim=2)
-        x = self.linear.forward(x)
+        # x = self.prep.forward(x)
+        # x = self.res_blocks.forward(x)
+        # x = self.avg_pool.forward(x)
+        # x = x.squeeze(dim=3)
+        # x = x.squeeze(dim=2)
+        x = self.flatten.forward(x)
+        x = self.linear1.forward(x)
+        # x=self.prep.forward(x)
+        # x = self.linear2.forward(x)
         x = self.softmax.forward(x)
 
         return x

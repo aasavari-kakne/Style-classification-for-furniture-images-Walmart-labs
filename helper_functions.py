@@ -163,7 +163,7 @@ def plot_confusion_matrix(cm, classes,name, normalize=False, title='Confusion ma
     plt.show()
     plt.savefig(name)
 
-def plot_acc_loss_classificator(data_csv,data_path='./'):
+def plot_acc_loss_classificator(data_csv,data_csv_train,data_path='./'):
   df = pd.read_csv(data_csv)
   epoch_ls=[int(val) for val in list(df['epoch'])]
   train_acc_ls=[float(val) for val in list(df['train_acc'])]
@@ -188,6 +188,26 @@ def plot_acc_loss_classificator(data_csv,data_path='./'):
   plt.legend(['train loss', 'test loss'], loc='upper left')
   #plt.savefig(data_path+'classificator_loss.png')
   plt.show()
+
+  df_train= pd.read_csv(data_csv_train)
+  train_loss_ls = [int(val) for val in list(df_train['batch_train_loss'])]
+  train_acc_ls = [int(val) for val in list(df_train['batch_train_accuracy'])]
+
+  interval=len(train_loss_ls)//100
+  plt.plot(train_loss_ls[::interval])
+  plt.title(f'classificator training loss (every {interval} iteration)')
+  plt.ylabel('train loss')
+  plt.xlabel(f"every {interval} iteration")
+  plt.show()
+
+  plt.plot(train_acc_ls[::interval])
+  plt.title(f'classificator training accuracy (every {interval} iteration)')
+  plt.ylabel('train acc')
+  plt.xlabel(f"every {interval} iteration")
+  plt.show()
+
+
+
 
 
 def plot_loss_for_cpc(data_loss_csv,data_path='./'):

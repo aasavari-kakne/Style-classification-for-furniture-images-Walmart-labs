@@ -47,6 +47,8 @@ class ImageNetDataset(Dataset):
             class_path = os.path.join(data_path, cls['class_name'])
             for image_name in os.listdir(class_path):
                 image_path = os.path.join(class_path, image_name)
+                '''debug!!!!'''
+#                print(image_name)
                 self.image_list.append(dict(
                     cls = cls,
                     image_path = image_path,
@@ -82,6 +84,11 @@ class ImageNetDataset(Dataset):
 
             tr = transforms.ToTensor()
             img1 = tr(img)
+            
+            ###test
+    #        print(img1.size)
+    #        print(img.size)
+            ###
             
             width, height = img.size
             if min(width, height)>IMG_SIZE[0] * 1.5:
@@ -140,3 +147,44 @@ def get_imagenet_datasets(data_path,mode, train_split = 0.8, num_classes = None,
         dataset_test  = ImageNetDataset(data_path_test, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
         dataset_val   = ImageNetDataset(data_path_val, is_train=True, random_seed=random_seed, num_classes = num_classes, train_split=1.0)
         return dataset_train, dataset_test, dataset_val
+
+
+
+#'''test corrupted images'''
+#data_path = "/Users/julie/Desktop/Walmart Lab/data/images/"
+#dataset_train, dataset_test = get_imagenet_datasets(data_path)
+#
+#print(f"Number of train samplest {dataset_train.__len__()}")
+#print(f"Number of samples in test split {dataset_test.__len__()}")
+#
+#BATCH_SIZE = 200
+#
+#data_loader_train = DataLoader(dataset_train, BATCH_SIZE, shuffle = True)
+#data_loader_test = DataLoader(dataset_test, BATCH_SIZE, shuffle = True)
+#
+#
+#import matplotlib.pyplot as plt
+#
+#fig, axes = plt.subplots(BATCH_SIZE//20,20, figsize=(6,10))
+#
+#for batch in data_loader_train:
+#
+#    print(f"Shape of batch['image'] {batch['image'].shape}")
+#    print(f"Shape of batch['cls'] {batch['cls'].shape}")
+#
+#    for i in range(BATCH_SIZE):
+#
+#        col = i % 20
+#        row = i // 20
+#
+#        img = batch['image'][i].numpy()
+#
+#        axes[row,col].set_axis_off()
+#        #axes[row,col].set_title(batch['class_name'][i])
+#        axes[row,col].imshow(np.transpose(img,(1,2,0)))
+#
+#    plt.show()
+#
+#    break
+
+

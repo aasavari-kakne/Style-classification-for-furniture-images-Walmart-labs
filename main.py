@@ -23,7 +23,7 @@ parser.add_argument('-mode', default=mode2 , type=str)
 parser.add_argument('-image_folder', default='tagged', type=str)
 parser.add_argument('-num_classes', default=16, type=int)
 #encoder_path=...
-encoder_path="best_res_ecoder_weights_untagged.pt"
+encoder_path="./models_images/Context_Pred_Training_model_run_7/best_res_ecoder_weights.pt"
 parser.add_argument('-batch_size', default=16, type=int)
 parser.add_argument('-sub_batch_size', default=2, type=int)
 parser.add_argument('-num_random_patches', default=15, type=int)

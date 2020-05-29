@@ -64,6 +64,7 @@ class ResNetBlock_v2(nn.Module):
 
 class SqueezeAndExcitationBlock(nn.Module):
 
+
     def __init__(self, r, channels):
         super(SqueezeAndExcitationBlock, self).__init__()
 
