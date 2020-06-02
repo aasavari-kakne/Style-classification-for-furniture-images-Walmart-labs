@@ -25,7 +25,7 @@ parser.add_argument('-num_classes', default=16, type=int)
 #encoder_path=...
 encoder_path="./models_images/Context_Pred_Training_model_run_7/best_res_ecoder_weights.pt"
 parser.add_argument('-batch_size', default=16, type=int)
-parser.add_argument('-sub_batch_size', default=2, type=int)
+parser.add_argument('-sub_batch_size', default=1, type=int)
 parser.add_argument('-num_random_patches', default=15, type=int)
 '''cpu or cuda'''
 parser.add_argument('-device', default='cuda', type=str)
